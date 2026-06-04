@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>資安教育模擬展示｜Social Engineering & Cloud Data Security</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #eef6ff, #f7fbff 45%, #ffffff);
+      color: #1f2937;
+      min-height: 100vh;
+    }
+
+    .watermark {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(2rem, 7vw, 6rem);
+      font-weight: 900;
+      color: rgba(37, 99, 235, 0.07);
+      transform: rotate(-18deg);
+      pointer-events: none;
+      z-index: 0;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    header {
+      position: relative;
+      z-index: 1;
+      padding: 36px 8vw 24px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1.12;
+      margin-bottom: 14px;
+      color: #0f172a;
+    }
+
+    .subtitle {
+      max-width: 860px;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #475569;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      padding: 20px 8vw 56px;
+    }
+
+    .notice {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-left: 8px solid #f97316;
+      border-radius: 18px;
+      padding: 18px 22px;
+      margin-bottom: 28px;
+      line-height: 1.7;
+    }
+
+    .notice strong {
+      color: #c2410c;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+      margin-bottom: 34px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid #dbeafe;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 18px 45px rgba(37, 99, 235, 0.08);
+      backdrop-filter: blur(10px);
+    }
+
+    .card h2 {
+      color: #1e40af;
+      margin-bottom: 12px;
+      font-size: 1.35rem;
+    }
+
+    .card p, .card li {
+      line-height: 1.7;
+      color: #475569;
+      font-size: 0.98rem;
+    }
+
+    .card ul {
+      padding-left: 20px;
+      margin-top: 10px;
+    }
+
+    .demo-box {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      margin-top: 24px;
+    }
+
+    .panel {
+      width: 100%;
+    }
+
+    .panel {
+      background: #ffffff;
+      border-radius: 26px;
+      border: 1px solid #dbeafe;
+      box-shadow: 0 20px 55px rgba(15, 23, 42, 0.08);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 16px 20px;
+      background: linear-gradient(90deg, #1d4ed8, #38bdf8);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .panel-header span {
+      font-weight: 700;
+    }
+
+    .panel-body {
+      padding: 24px;
+    }
+
+    .stepper {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .step {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1e40af;
+      font-weight: 700;
+      font-size: 0.88rem;
+      border: 1px solid #bfdbfe;
+    }
+
+    .email-card {
+      border: 1px solid #dbe4f0;
+      border-radius: 20px;
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    .email-topbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: #f1f5f9;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .red { background: #ef4444; }
+    .yellow { background: #f59e0b; }
+    .green { background: #22c55e; }
+
+    .email-content {
+      padding: 20px;
+      line-height: 1.75;
+    }
+
+    .email-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .sender-profile {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2563eb, #38bdf8);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.1rem;
+    }
+
+    .sender-name {
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .sender-mail {
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+
+    .fake-tag {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #fee2e2;
+      color: #b91c1c;
+      font-size: 0.78rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .subject-line {
+      font-size: 1.08rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 14px;
+    }
+
+    .urgent-box {
+      margin: 16px 0;
+      padding: 14px;
+      border-radius: 14px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+    }
+
+    .email-meta {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      color: #64748b;
+      font-size: 0.88rem;
+    }
+
+    .email-card .from {
+      color: #64748b;
+      font-size: 0.92rem;
+      margin-bottom: 8px;
+    }
+
+    .fake-button, button {
+      border: none;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-weight: 800;
+      cursor: pointer;
+      background: #2563eb;
+      color: white;
+      margin-top: 14px;
+      transition: 0.2s ease;
+    }
+
+    .fake-button:hover, button:hover {
+      transform: translateY(-1px);
+      background: #1d4ed8;
+    }
+
+    .login-mock {
+      max-width: 420px;
+      margin: 0 auto;
+      border: 2px dashed #93c5fd;
+      border-radius: 22px;
+      padding: 26px;
+      background: linear-gradient(180deg, #ffffff, #f8fbff);
+      position: relative;
+    }
+
+    .demo-ribbon {
+      display: inline-block;
+      background: #fee2e2;
+      color: #b91c1c;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-weight: 800;
+      font-size: 0.78rem;
+      margin-bottom: 14px;
+    }
+
+    .login-mock h3 {
+      margin-bottom: 8px;
+      color: #0f172a;
+    }
+
+    .login-mock p {
+      color: #64748b;
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      margin-bottom: 6px;
+      color: #334155;
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      font-size: 1rem;
+      background: #f8fafc;
+    }
+
+    .warning-result {
+      display: none;
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 16px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      line-height: 1.6;
+      font-weight: 700;
+    }
+
+    .cloud-files {
+      display: none;
+      margin-top: 20px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 18px;
+    }
+
+    .hacker-view {
+      display: none;
+      margin-top: 24px;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid #334155;
+      background: #020617;
+      box-shadow: 0 24px 60px rgba(2, 6, 23, 0.28);
+    }
+
+    .hacker-header {
+      padding: 14px 18px;
+      background: #111827;
+      color: #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #334155;
+    }
+
+    .hacker-header strong {
+      color: #fca5a5;
+    }
+
+    .hacker-body {
+      padding: 20px;
+      color: #d1d5db;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      line-height: 1.8;
+    }
+
+    .terminal-line {
+      margin-bottom: 6px;
+    }
+
+    .terminal-green {
+      color: #86efac;
+    }
+
+    .terminal-red {
+      color: #fca5a5;
+    }
+
+    .terminal-blue {
+      color: #93c5fd;
+    }
+
+    .stolen-card {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid #475569;
+    }
+
+    .stolen-card h4 {
+      color: #fca5a5;
+      margin-bottom: 10px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+    }
+
+    .fake-credential {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 8px;
+      font-size: 0.92rem;
+    }
+
+    .fake-credential span:nth-child(odd) {
+      color: #93c5fd;
+    }
+
+    .hacker-note {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(127, 29, 29, 0.28);
+      border: 1px solid rgba(252, 165, 165, 0.45);
+      color: #fecaca;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+      line-height: 1.6;
+    }
+
+    .file {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      margin-bottom: 10px;
+      background: #f8fafc;
+    }
+
+    .file strong {
+      color: #0f172a;
+    }
+
+    .file span {
+      color: #64748b;
+      font-size: 0.88rem;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 34px;
+    }
+
+    .flow-step {
+      text-align: center;
+      padding: 22px 16px;
+      border-radius: 22px;
+      border: 1px solid #bfdbfe;
+      background: rgba(239, 246, 255, 0.86);
+      position: relative;
+    }
+
+    .flow-step:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      right: -17px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #2563eb;
+      font-size: 1.6rem;
+      font-weight: 900;
+    }
+
+    .icon {
+      font-size: 2.1rem;
+      margin-bottom: 10px;
+    }
+
+    .flow-step h3 {
+      color: #1e3a8a;
+      margin-bottom: 8px;
+    }
+
+    .flow-step p {
+      color: #475569;
+      line-height: 1.6;
+      font-size: 0.92rem;
+    }
+
+    footer {
+      padding: 26px 8vw 42px;
+      color: #64748b;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 900px) {
+      .grid, .flow {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-step:not(:last-child)::after {
+        content: "↓";
+        right: 50%;
+        top: auto;
+        bottom: -24px;
+        transform: translateX(50%);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="watermark">CYBERSECURITY<br />EDUCATION ONLY</div>
+
+  <header>
+    <div class="badge">DEMO｜模擬示範｜非真實攻擊</div>
+    <h1>一封可疑郵件，如何影響雲端資料安全？</h1>
+    <p class="subtitle">
+      本網站為資訊安全課堂展示，用來說明「社交工程」與「雲端資料外包」之間的關聯。所有輸入內容只會停留在瀏覽器畫面中，不會送出、不會儲存、不會連接任何真實服務。
+    </p>
+  </header>
+
+  <main>
+    <section class="notice">
+      <strong>安全聲明：</strong>這是教育用途的互動式 mockup。畫面中的登入頁、雲端資料夾與檔案皆為虛構示意，目的在於培養辨識可疑訊息與保護帳號的能力。
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Part 1｜社交工程情境</h2>
+        <p>學生收到一封看似正式的通知信，內容要求立即確認雲端檔案狀態。重點不是技術破解，而是利用人的信任與緊張感。</p>
+      </div>
+      <div class="card">
+        <h2>Part 2｜登入頁面示意</h2>
+        <p>使用者進入仿真的登入畫面。這裡的表單不會送出資料，只用來呈現「如果缺乏警覺，可能發生什麼事」。</p>
+      </div>
+      <div class="card">
+        <h2>Part 3｜雲端資料風險</h2>
+        <p>當帳號保護不足時，雲端中的檔案可能被不當存取。因此，雲端安全不只靠平台，也需要使用者防範社交工程。</p>
+      </div>
+    </section>
+
+    <section class="demo-box">
+      <div class="panel">
+        <div class="panel-header">
+          <span>Step 1：可疑郵件展示</span>
+          <small>EDUCATIONAL SIMULATION</small>
+        </div>
+        <div class="panel-body">
+          <div class="stepper">
+            <div class="step">收到郵件</div>
+            <div class="step">辨識風險</div>
+            <div class="step">課堂討論</div>
+          </div>
+
+          <div class="email-card">
+            <div class="email-topbar">
+              <div class="dot red"></div>
+              <div class="dot yellow"></div>
+              <div class="dot green"></div>
+            </div>
+
+            <div class="email-content">
+              <div class="email-header-row">
+                <div class="sender-profile">
+                  <div class="avatar">CD</div>
+                  <div>
+                    <div class="sender-name">Cloud Drive Support</div>
+                    <div class="sender-mail">security-notice@cloud-drive-support.com</div>
+                  </div>
+                </div>
+                <div class="fake-tag">SIMULATION</div>
+              </div>
+
+              <div class="subject-line">
+                ⚠️ 您的雲端帳號出現異常登入紀錄
+              </div>
+
+              <p>親愛的使用者您好：</p>
+              <p>
+                我們偵測到您的雲端空間於 <strong>未知裝置</strong> 發生登入行為。為了保護您的檔案與帳號安全，系統已暫時限制部分功能。
+              </p>
+
+              <div class="urgent-box">
+                ⏰ 若未於 30 分鐘內完成驗證，部分雲端檔案可能會被暫時停用。
+              </div>
+
+              <p>
+                請點擊下方按鈕完成帳號狀態確認：
+              </p>
+
+              <button onclick="showLogin()">立即確認帳號狀態</button>
+
+              <div class="email-meta">
+                <span>📍 IP：203.0.113.24（示意）</span>
+                <span>🕒 Time：08:42 AM</span>
+                <span>🔐 Security Alert</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span>Step 2：仿真登入頁示意</span>
+          <small>DEMO ONLY</small>
+        </div>
+        <div class="panel-body">
+          <div class="login-mock" id="loginMock">
+            <div class="demo-ribbon">模擬登入頁｜不會送出資料</div>
+            <h3>Cloud Drive Education Demo</h3>
+            <p>這是一個課堂展示頁面，用來說明可疑連結可能導向不可信的登入畫面。</p>
+
+            <label for="email">帳號示意</label>
+            <input id="email" type="text" placeholder="student@example.edu" autocomplete="off" />
+
+            <label for="password">密碼示意</label>
+            <input id="password" type="password" placeholder="請勿輸入真實密碼" autocomplete="off" />
+
+            <button onclick="showResult()">送出模擬</button>
+
+            <div class="warning-result" id="warningResult">
+              🚨 模擬警示：帳號已進入高風險狀態！如果這是真實可疑網站，剛才輸入的資訊可能已被取得。請立刻停止操作、回報管理者，並更換密碼與啟用雙重驗證。
+            </div>
+
+            <div class="hacker-view" id="hackerView">
+              <div class="hacker-header">
+                <strong>Attacker View｜攻擊者視角模擬</strong>
+                <small>DEMO ONLY</small>
+              </div>
+              <div class="hacker-body">
+                <div class="terminal-line terminal-green">$ simulated_session_started</div>
+                <div class="terminal-line">[INFO] User submitted credentials to a suspicious page.</div>
+                <div class="terminal-line terminal-red">[ALERT] Account status: COMPROMISED in this simulation</div>
+                <div class="terminal-line terminal-blue">[NOTE] No real data is collected or stored.</div>
+
+                <div class="stolen-card">
+                  <h4>模擬取得的登入資訊</h4>
+                  <div class="fake-credential">
+                    <span>Account</span><span>demo_student@example.edu</span>
+                    <span>Password</span><span>••••••••（已遮蔽，非真實資料）</span>
+                    <span>Status</span><span class="terminal-red">High Risk</span>
+                  </div>
+                </div>
+
+                <div class="hacker-note">
+                  教育重點：攻擊者不一定需要破解雲端系統，只要使用者把帳號資訊交到錯誤頁面，就可能造成帳號與雲端資料風險。
+                </div>
+              </div>
+            </div>
+
+            <div class="cloud-files" id="cloudFiles">
+              <h3 style="margin-bottom: 12px; color:#1e40af;">Step 3：雲端資料被存取示意</h3>
+              <div class="file"><strong>grades.xlsx</strong><span>成績資料示意</span></div>
+              <div class="file"><strong>medical_record.txt</strong><span>醫療紀錄示意</span></div>
+              <div class="file"><strong>research_data.csv</strong><span>研究資料示意</span></div>
+              <div class="file"><strong>student_info.docx</strong><span>個人資料示意</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="flow">
+      <div class="flow-step">
+        <div class="icon">📩</div>
+        <h3>收到可疑郵件</h3>
+        <p>以緊急通知、帳號確認、檔案異常等方式吸引注意。</p>
+      </div>
+      <div class="flow-step">
+        <div class="icon">🔗</div>
+        <h3>點擊連結</h3>
+        <p>使用者被引導到非官方或仿真的頁面。</p>
+      </div>
+      <div class="flow-step">
+        <div class="icon">🧾</div>
+        <h3>登入頁示意</h3>
+        <p>課堂中用 mockup 呈現風險，不收集任何真實資料。</p>
+      </div>
+      <div class="flow-step">
+        <div class="icon">☁️</div>
+        <h3>雲端資料風險</h3>
+        <p>帳號保護不足時，雲端資料可能面臨未授權存取風險。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    CYBERSECURITY EDUCATION ONLY｜DEMO｜模擬示範｜請勿輸入任何真實帳號或密碼
+  </footer>
+
+  <script>
+    function showLogin() {
+      document.getElementById("loginMock").scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    function showResult() {
+      const email = document.getElementById("email");
+      const password = document.getElementById("password");
+
+      // 教育展示安全設計：不讀取、不傳送、不儲存使用者輸入。
+      email.value = "";
+      password.value = "";
+
+      document.getElementById("warningResult").style.display = "block";
+      document.getElementById("hackerView").style.display = "block";
+      document.getElementById("cloudFiles").style.display = "block";
+      document.getElementById("hackerView").scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  </script>
+</body>
+</html>
